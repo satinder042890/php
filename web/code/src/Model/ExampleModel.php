@@ -12,18 +12,23 @@ use Mini\Model\Model;
 class ExampleModel extends Model
 {
     /* Data Members of class */
+    private $id;
     private $created;
     private $code;
     private $description;
     
     /* Constructor to initialize data members of class */
-    public function __construct($created,$code,$description){
+    public function __construct($id,$created,$code,$description){
+        $this->id=$id;
         $this->created=$created;
         $this->code=$code;
         $this->description=$description;
     }
     
     /* Setter Methods for private data to access it in controller */
+    public function setId($id){
+        $this->id=id;
+    }
      public function setCreated($created){
          $this->created=created;
      }
@@ -40,9 +45,9 @@ class ExampleModel extends Model
      *
      * @param int $id example id
      *  
-     * @return array example data
+     * @return object example data
      */
-    public function get(int $id): array
+    public function get(int $id): object
     {
         $sql = '
             SELECT
@@ -55,23 +60,19 @@ class ExampleModel extends Model
             WHERE
                 example_id = ?';
 
-        /** My Code to store table data in object */
-            $obj=mysql_fetch_object($sql);
-        /* ************************************** */
-
-        return $this->db->select([
+       $data=$this->db->select([
             'title'  => 'Get example data',
-            'sql'    => $obj,
+            'sql'    => $sql,
             'inputs' => [$id]
         ]);
+        $obj=(object) $data;
+        return $obj;
+
     }
 
     /**
      * Create an example.
      *
-     * @param string $created     example created on
-     * @param string $code        example code
-     * @param string $description example description
      *  
      * @return int example id
      */
